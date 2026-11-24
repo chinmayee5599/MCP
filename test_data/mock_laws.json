@@ -1,0 +1,101 @@
+{
+  "jurisdictions": {
+    "california": {
+      "canonical_name": "california",
+      "display_name": "State of California",
+      "statute_title": "California Civil Code Section 1950.5",
+      "statute_citation": "Cal. Civ. Code § 1950.5(g)(1)",
+      "statutory_deadline_days": 21,
+      "deadline_description": "Landlord must furnish an itemized statement and refund within 21 calendar days after tenant vacates.",
+      "forfeiture_on_deadline_breach": true,
+      "forfeiture_rule": "Failure to provide itemized statement within 21 days forfeits landlord's right to retain any portion of security deposit (Granberry v. Islay Investments).",
+      "itemized_statement_required": true,
+      "receipts_required_threshold": 125.0,
+      "bad_faith_penalty_multiplier": 2.0,
+      "bad_faith_penalty_rule": "Statutory damages up to twice the amount of the security deposit for bad-faith withholding under § 1950.5(l).",
+      "allowable_deductions": [
+        "Unpaid rent owed under valid agreement",
+        "Cleaning necessary to return unit to initial move-in level of cleanliness",
+        "Repair of damages exceeding normal wear and tear caused by tenant or guests"
+      ],
+      "prohibited_deductions": [
+        "Ordinary wear and tear resulting from normal residential use",
+        "Repainting walls where tenancy exceeded 2 years unless unauthorized damage occurred",
+        "Routine carpet cleaning or carpet replacement without documented tenant-caused destruction",
+        "Pre-existing damages documented prior to tenancy",
+        "Charges for landlord's personal time without actual third-party vendor receipts"
+      ],
+      "tenant_demand_waiting_period_days": 14
+    },
+    "new_york": {
+      "canonical_name": "new_york",
+      "display_name": "State of New York",
+      "statute_title": "New York General Obligations Law Section 7-108",
+      "statute_citation": "N.Y. Gen. Oblig. Law § 7-108(1-a)(e)",
+      "statutory_deadline_days": 14,
+      "deadline_description": "Landlord must provide an itemized statement and return deposit within 14 days after tenant vacates.",
+      "forfeiture_on_deadline_breach": true,
+      "forfeiture_rule": "If landlord fails to provide itemized statement within 14 days, landlord forfeits any right to retain any portion of the deposit under Housing Stability and Tenant Protection Act (HSTPA).",
+      "itemized_statement_required": true,
+      "receipts_required_threshold": 0.0,
+      "bad_faith_penalty_multiplier": 2.0,
+      "bad_faith_penalty_rule": "Punitive damages up to double the deposit amount for willful violation under § 7-108(1-a)(g).",
+      "allowable_deductions": [
+        "Unpaid rent accrued during lawful occupancy",
+        "Damage caused by tenant beyond normal wear and tear",
+        "Non-utility charges authorized explicitly by signed lease"
+      ],
+      "prohibited_deductions": [
+        "Normal wear and tear from customary usage",
+        "Painting or wall maintenance required by local housing maintenance codes",
+        "Wear to floors, appliances, and fixtures consistent with age and occupancy",
+        "Deductions made without attaching detailed itemized repair receipts"
+      ],
+      "tenant_demand_waiting_period_days": 10
+    }
+  },
+  "wear_and_tear_benchmarks": {
+    "painting": {
+      "canonical_category": "painting",
+      "keywords": ["paint", "painting", "wall", "walls", "scuff", "scuffs", "repaint"],
+      "useful_life_years": 2.0,
+      "statutory_standard": "Under state guidelines, residential interior paint has a 2-year useful life. After 2 years of occupancy, repainting is 100% normal wear-and-tear.",
+      "auto_wear_threshold_years": 2.0
+    },
+    "carpet": {
+      "canonical_category": "carpet",
+      "keywords": ["carpet", "rug", "flooring", "steam clean", "carpet clean"],
+      "useful_life_years": 5.0,
+      "statutory_standard": "Carpet has a standard 5-year useful life. Routine cleaning fees upon vacancy cannot be deducted if tenant maintained reasonable broom-clean cleanliness.",
+      "auto_wear_threshold_years": 3.0
+    },
+    "cleaning": {
+      "canonical_category": "cleaning",
+      "keywords": ["clean", "cleaning", "maid", "deep clean", "janitorial", "turnover"],
+      "useful_life_years": 1.0,
+      "statutory_standard": "Landlords cannot deduct for standard turnover cleaning. Deductions are lawful only to restore the unit to its move-in cleanliness level.",
+      "auto_wear_threshold_years": 1.0
+    },
+    "hardware_and_fixtures": {
+      "canonical_category": "hardware_and_fixtures",
+      "keywords": ["nail", "holes", "blinds", "lock", "handle", "faucet", "fixtures", "maintenance"],
+      "useful_life_years": 5.0,
+      "statutory_standard": "Minor picture-hanging nail holes, pin holes, and minor hardware loosening constitute ordinary residential wear and tear.",
+      "auto_wear_threshold_years": 1.0
+    }
+  },
+  "aliases": {
+    "ca": "california",
+    "calif": "california",
+    "california": "california",
+    "los angeles": "california",
+    "la": "california",
+    "san francisco": "california",
+    "sf": "california",
+    "ny": "new_york",
+    "new york": "new_york",
+    "new_york": "new_york",
+    "nyc": "new_york",
+    "new york city": "new_york"
+  }
+}

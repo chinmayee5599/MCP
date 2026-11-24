@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TenantShield — Autonomous Security Deposit & Lease Rights Defender</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-bold text-lg text-white tracking-tight">TenantShield</h1>
+                        <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            Make MCP Matter
+                        </span>
+                        <span class="text-[11px] font-mono text-slate-400">
+                            Stdio
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400">Autonomous Lease & Security Deposit Defender</p>
+                </div>
+            </div>
+
+            <!-- MCP Protocol Health Badge -->
+            <div class="flex items-center space-x-3">
+                <div id="mcp-status-badge" class="connection-status-badge flex items-center space-x-2 text-xs bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700">
+                    <span id="mcp-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="mcp-status-text" class="text-slate-300 font-medium">MCP Active (2 Servers)</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8 space-y-8">
+
+        <!-- Banner / Hero Summary -->
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Don’t Let Landlords Pocket Your Deposit.
+            </h2>
+            <p class="text-sm text-slate-400 leading-relaxed">
+                TenantShield deploys specialized <span class="text-emerald-400 font-medium">Model Context Protocol (MCP)</span> tools over standard stdio pipes to audit landlord deductions against municipal civil codes, useful life standards, and statutory return deadlines.
+            </p>
+        </div>
+
+        <!-- Section 1: User Input & Demo Presets -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-800">
+                <div>
+                    <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+                        <span>1. Dispute Statement & Parameters</span>
+                    </h3>
+                    <p class="text-xs text-slate-400">Describe your tenancy dispute or select a curated hackathon demo case below.</p>
+                </div>
+
+                <!-- 1-Click Demo Presets -->
+                <div class="flex items-center gap-2 flex-wrap text-xs">
+                    <span class="text-slate-500 text-[11px] font-medium">Load Preset:</span>
+                    <button type="button" id="preset-la-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-emerald-400 transition-colors">
+                        📍 Los Angeles ($1,050 Deduction)
+                    </button>
+                    <button type="button" id="preset-ny-btn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-emerald-400 transition-colors">
+                        📍 New York City ($900 Deduction)
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <textarea id="dispute-input" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-emerald-500 font-sans leading-relaxed" placeholder="e.g., I lived in an apartment in Los Angeles for 3 years. My landlord sent me a notice 26 days after move-out deducting $600 for wall painting and $450 for carpet cleaning. Help me get my deposit back."></textarea>
+                    <p id="input-error-msg" class="hidden text-rose-400 text-xs font-medium mt-1.5"></p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 text-xs">
+                        <span class="text-slate-400">Jurisdiction:</span>
+                        <select id="jurisdiction-select" class="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-emerald-500">
+                            <option value="California">California (Civil Code § 1950.5)</option>
+                            <option value="New York">New York (General Obligations Law § 7-108)</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="run-audit-btn" class="bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
+                        <span id="audit-btn-text">Run MCP Legal Audit</span>
+                        <svg id="audit-spinner" class="hidden animate-spin h-4 w-4 text-slate-950" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: MCP Orchestration Stepper (Visual Architecture Pipeline) -->
+        <div id="stepper-section" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h3 class="font-semibold text-white text-xs uppercase tracking-wider text-slate-400 mb-4 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <span>MCP Pipeline Activity (Stdio Transport)</span>
+                </span>
+                <span id="pipeline-status-badge" class="text-[11px] font-mono text-slate-500 lowercase">idle</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs">
+                <!-- Step 1: Goal Extraction -->
+                <div id="step-card-1" class="p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-slate-600 step-dot"></span>
+                                <span class="font-bold text-slate-200">1. Goal Parse</span>
+                            </div>
+                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 step-tag">CLIENT</span>
+                        </div>
+                        <p class="text-[11px] font-mono text-emerald-400/90 font-medium truncate mb-1 step-tool">Natural Language</p>
+                        <p class="text-[11px] text-slate-400 leading-snug step-desc">Extract jurisdiction, timeline & deductions</p>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono">
+                        <span class="text-slate-500">Status</span>
+                        <span class="text-slate-400 font-semibold step-status">IDLE</span>
+                    </div>
+                </div>
+
+                <!-- Step 2: Tool A -->
+                <div id="step-card-2" class="p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-slate-600 step-dot"></span>
+                                <span class="font-bold text-slate-200">2. Tool A (READ)</span>
+                            </div>
+                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 step-tag">MCP • stdio</span>
+                        </div>
+                        <p class="text-[11px] font-mono text-emerald-400/90 font-medium truncate mb-1 step-tool">get_statutory_deadlines</p>
+                        <p class="text-[11px] text-slate-400 leading-snug step-desc">get_statutory_deadlines on tenancy_law_mcp</p>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono">
+                        <span class="text-slate-500">Status</span>
+                        <span class="text-slate-400 font-semibold step-status">IDLE</span>
+                    </div>
+                </div>
+
+                <!-- Step 3: Tool B -->
+                <div id="step-card-3" class="p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-slate-600 step-dot"></span>
+                                <span class="font-bold text-slate-200">3. Tool B (ANALYZE)</span>
+                            </div>
+                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-teal-950/40 text-teal-400 border border-teal-800/40 step-tag">MCP • stdio</span>
+                        </div>
+                        <p class="text-[11px] font-mono text-teal-400/90 font-medium truncate mb-1 step-tool">evaluate_wear_and_tear</p>
+                        <p class="text-[11px] text-slate-400 leading-snug step-desc">evaluate_wear_and_tear useful life check</p>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono">
+                        <span class="text-slate-500">Status</span>
+                        <span class="text-slate-400 font-semibold step-status">IDLE</span>
+                    </div>
+                </div>
+
+                <!-- Step 4: Decision & Gating -->
+                <div id="step-card-4" class="p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-slate-600 step-dot"></span>
+                                <span class="font-bold text-slate-200">4. Human Gate</span>
+                            </div>
+                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950/40 text-amber-400 border border-amber-800/40 step-tag">SAFETY</span>
+                        </div>
+                        <p class="text-[11px] font-mono text-amber-300 font-medium truncate mb-1 step-tool">ActionManager Gating</p>
+                        <p class="text-[11px] text-slate-400 leading-snug step-desc">Halt execution pending user authorization</p>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono">
+                        <span class="text-slate-500">Status</span>
+                        <span class="text-slate-400 font-semibold step-status">IDLE</span>
+                    </div>
+                </div>
+
+                <!-- Step 5: Tool C Action -->
+                <div id="step-card-5" class="p-3.5 rounded-xl border border-slate-800 bg-slate-950/60 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-slate-600 step-dot"></span>
+                                <span class="font-bold text-slate-200">5. Tool C (WRITE)</span>
+                            </div>
+                            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 step-tag">MCP • stdio</span>
+                        </div>
+                        <p class="text-[11px] font-mono text-emerald-400/90 font-medium truncate mb-1 step-tool">stage_formal_demand_letter</p>
+                        <p class="text-[11px] text-slate-400 leading-snug step-desc">stage_formal_demand_letter compiled</p>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono">
+                        <span class="text-slate-500">Status</span>
+                        <span class="text-slate-400 font-semibold step-status">IDLE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Audit Findings & Discrepancies (Dynamic Result) -->
+        <div id="findings-section" class="hidden space-y-6">
+            <!-- Findings Header & AI Decision Trace Trigger -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                <div>
+                    <h3 class="font-bold text-white text-base flex items-center gap-2">
+                        <span>Legal Audit Findings & Evidence</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verified</span>
+                    </h3>
+                    <p class="text-xs text-slate-400">Deterministic synthesis of municipal statute deadlines and depreciation benchmarks.</p>
+                </div>
+                <button type="button" id="open-trace-btn" class="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-emerald-400 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm hover:border-emerald-500/40">
+                    <svg class="w-3.5 h-3.5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                    <span>🔍 View AI Decision Trace</span>
+                </button>
+            </div>
+
+            <!-- 3 Stat KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                    <p class="text-xs text-slate-400 font-medium">Unlawfully Withheld Principal</p>
+                    <p id="kpi-principal" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1">$0.00</p>
+                    <p id="kpi-principal-sub" class="text-[11px] text-slate-500 mt-1">100% Ordinary Wear & Tear</p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                    <p class="text-xs text-slate-400 font-medium">Statutory Bad-Faith Damages</p>
+                    <p id="kpi-penalties" class="text-2xl sm:text-3xl font-extrabold text-teal-400 mt-1">$0.00</p>
+                    <p id="kpi-penalties-sub" class="text-[11px] text-slate-500 mt-1">2.0x Statutory Multiplier</p>
+                </div>
+
+                <div class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-lg bg-emerald-950/10">
+                    <p class="text-xs text-emerald-400 font-medium">Total Monetary Recovery Claim</p>
+                    <p id="kpi-total" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">$0.00</p>
+                    <p id="kpi-total-sub" class="text-[11px] text-emerald-400/80 mt-1">Eligible for Small Claims Demand</p>
+                </div>
+            </div>
+
+            <!-- Statutory Violation Banner -->
+            <div id="deadline-violation-alert" class="bg-rose-950/40 border border-rose-800/60 rounded-2xl p-4 flex items-start gap-3">
+                <div class="p-2 bg-rose-500/10 rounded-xl border border-rose-500/20 text-rose-400 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-rose-300 uppercase tracking-wider">Statutory Forfeiture Triggered</h4>
+                    <p id="deadline-violation-text" class="text-xs text-slate-300 mt-0.5 leading-relaxed">
+                        Notice delivered on Day 26 exceeds the mandatory 21-day deadline under California Civil Code § 1950.5(g)(1). The landlord has forfeited all rights to retain any portion of the deposit.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Itemized Deduction Audit Table -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                <h4 class="font-semibold text-white text-sm">Itemized Deduction Legal Audit</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="border-b border-slate-800 text-slate-400">
+                                <th class="pb-2.5 font-medium">Item Description</th>
+                                <th class="pb-2.5 font-medium">Billed Amount</th>
+                                <th class="pb-2.5 font-medium">Lawful Charge</th>
+                                <th class="pb-2.5 font-medium">Unlawful Amount</th>
+                                <th class="pb-2.5 font-medium">Statutory Classification</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-table-body" class="divide-y divide-slate-800/60 font-mono text-slate-300">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Decision Summaries Block -->
+                <div class="pt-4 border-t border-slate-800 space-y-2">
+                    <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Agent Decision Summary:</p>
+                    <ul id="decision-summaries-list" class="space-y-1 text-xs text-slate-300 font-sans list-disc list-inside">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Section 4: Human-in-the-Loop Approval Card (The Safety System) -->
+            <div id="approval-card" class="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-emerald-500/40 rounded-2xl p-6 shadow-2xl space-y-6">
+                <div class="flex items-start justify-between gap-4 pb-4 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base">Human Approval Gate: Consequential Action Proposed</h3>
+                            <p class="text-xs text-slate-400">Review the AI proposal and transparency disclosures below before authorizing execution.</p>
+                        </div>
+                    </div>
+
+                    <span class="text-[11px] font-mono font-bold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                        APPROVAL REQUIRED
+                    </span>
+                </div>
+
+                <!-- Prominent Safety State & Governance Chain -->
+                <div id="approval-safety-banner" class="bg-amber-950/30 border border-amber-500/40 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-amber-950/20 transition-all">
+                    <div class="flex items-start gap-3">
+                        <span id="safety-lock-icon" class="text-2xl shrink-0 mt-0.5">🔒</span>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span id="safety-lock-title" class="font-bold text-amber-300 text-xs sm:text-sm uppercase tracking-wider">ACTION LOCKED</span>
+                                <span id="safety-lock-subtitle" class="text-[10px] text-amber-400 font-mono px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30">Gated by ActionManager</span>
+                            </div>
+                            <p id="safety-lock-desc" class="text-xs text-slate-300 mt-1 leading-relaxed">
+                                AI recommendation ready. Human authorization required before the write tool can execute.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Governance Visual Chain -->
+                    <div class="flex items-center gap-1.5 text-[10px] font-mono shrink-0 bg-slate-950/80 px-3 py-2 rounded-lg border border-slate-800">
+                        <span class="text-emerald-400 font-semibold">AI RECOMMENDS</span>
+                        <span class="text-slate-600 font-bold">→</span>
+                        <span class="text-amber-300 font-semibold">HUMAN REVIEWS</span>
+                        <span class="text-slate-600 font-bold">→</span>
+                        <span class="text-amber-400 font-bold underline decoration-amber-500/50">HUMAN AUTHORIZES</span>
+                        <span class="text-slate-600 font-bold">→</span>
+                        <span class="text-teal-400 font-semibold">MCP WRITE TOOL</span>
+                    </div>
+                </div>
+
+                <!-- 5 Transparency Disclosures Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                        <span class="font-semibold text-emerald-400">1. What the AI wants to do:</span>
+                        <p id="disclosure-what" class="text-slate-300 leading-relaxed"></p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                        <span class="font-semibold text-emerald-400">2. Why this action is recommended:</span>
+                        <p id="disclosure-why" class="text-slate-300 leading-relaxed"></p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                        <span class="font-semibold text-teal-400">3. What will happen if approved:</span>
+                        <p id="disclosure-consequences" class="text-slate-300 leading-relaxed"></p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
+                        <span class="font-semibold text-rose-400">4. What will NOT happen:</span>
+                        <p id="disclosure-not-happen" class="text-slate-300 leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <!-- Editable Overrides Drawer -->
+                <div class="pt-2 border-t border-slate-800/80">
+                    <details class="text-xs group">
+                        <summary class="font-medium text-slate-400 hover:text-slate-200 cursor-pointer flex items-center gap-1.5 select-none">
+                            <svg class="w-4 h-4 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                            <span>Customize Notice Parameters (Optional Overrides)</span>
+                        </summary>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-2">
+                            <div>
+                                <label class="block text-slate-400 text-[11px] mb-1">Your Name (Tenant):</label>
+                                <input type="text" id="override-tenant-name" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500" value="Jane Doe">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 text-[11px] mb-1">Landlord / Entity Name:</label>
+                                <input type="text" id="override-landlord-name" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500" value="Sunset Real Estate LLC">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 text-[11px] mb-1">Rental Address:</label>
+                                <input type="text" id="override-rental-address" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500" value="742 Evergreen Terrace, Los Angeles, CA">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 text-[11px] mb-1">Payment Demand Deadline (Days):</label>
+                                <input type="number" id="override-demand-days" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-emerald-500" value="10">
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Error Notice for Action Execution -->
+                <p id="action-error-msg" class="hidden text-rose-400 text-xs font-medium"></p>
+
+                <!-- Approval Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-3 border-t border-slate-800">
+                    <button type="button" id="reject-action-btn" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-rose-800/80 hover:bg-rose-950/40 text-rose-300 text-xs font-semibold transition-colors">
+                        Decline Action
+                    </button>
+                    <button type="button" id="approve-action-btn" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 text-xs font-bold transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
+                        <span>Authorize & Execute Action</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 5: Action Result / Document Display (After Approval) -->
+            <div id="result-document-section" class="hidden bg-slate-900 border border-emerald-500/40 rounded-2xl p-6 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        <h4 class="font-bold text-white text-sm">Action Complete: Courtroom-Ready Formal Legal Notice</h4>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="copy-doc-btn" class="text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                            </svg>
+                            <span id="copy-btn-text">Copy Notice</span>
+                        </button>
+                        <button type="button" id="download-doc-btn" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            <span>Download .txt</span>
+                        </button>
+                    </div>
+                </div>
+
+                <pre id="formal-letter-pre" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-[11px] font-mono text-slate-300 overflow-x-auto max-h-96 leading-relaxed select-all whitespace-pre-wrap"></pre>
+
+                <div class="p-3 bg-emerald-950/20 border border-emerald-800/40 rounded-xl text-xs text-emerald-300 flex items-center justify-between">
+                    <span>✓ Document compiled and staged. Ready for certified mail dispatch.</span>
+                    <span class="font-mono text-[11px] text-slate-400">formal_notice_mcp: stage_formal_demand_letter</span>
+                </div>
+            </div>
+
+            <!-- Section 6: Action Rejection Banner (If User Declined) -->
+            <div id="rejected-banner" class="hidden bg-slate-900 border border-rose-800/60 rounded-2xl p-6 shadow-xl text-center space-y-2">
+                <div class="w-10 h-10 mx-auto rounded-full bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+                <h4 class="font-bold text-white text-sm">Action Cancelled by User</h4>
+                <p class="text-xs text-slate-400 max-w-md mx-auto">
+                    The proposed formal legal demand was declined. No documents have been dispatched or recorded. You retain full control over when and how you proceed.
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- AI Decision Trace Slide Drawer -->
+    <div id="trace-drawer-container" class="hidden fixed inset-0 z-50 flex justify-end bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300">
+        <div id="trace-drawer" class="w-full max-w-lg bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col h-full transform transition-transform duration-300">
+            <!-- Drawer Header -->
+            <div class="px-6 py-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/70">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-lg">🔍</span>
+                    <div>
+                        <h3 class="font-bold text-white text-sm tracking-tight">AI Decision Trace</h3>
+                        <p class="text-[11px] text-slate-400 font-mono">MCP Tool Invocations & Factual Audit Trail</p>
+                    </div>
+                </div>
+                <button type="button" id="close-trace-btn" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Drawer Content (Structured Audit Trail) -->
+            <div id="trace-content" class="flex-1 overflow-y-auto p-6 space-y-4 font-mono text-xs text-slate-300">
+                <!-- Dynamically populated from existing audit results -->
+            </div>
+
+            <!-- Drawer Footer -->
+            <div class="px-6 py-4 border-t border-slate-800 bg-slate-950/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Protocol: MCP JSON-RPC 2.0</span>
+                </span>
+                <span>stdio Transport</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        TenantShield &bull; Make MCP Matter &bull; Local-First, Privacy-Preserving Legal Intelligence
+    </footer>
+
+    <!-- Client Script -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
